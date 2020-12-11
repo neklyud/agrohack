@@ -4,6 +4,7 @@ import uvicorn
 import asyncio
 import os
 import time
+from fastapi.encoders import jsonable_encoder
 
 SHARED_PATH = "{}/../shared".format(os.path.abspath(os.environ["PYTHONPATH"]))
 
@@ -30,13 +31,19 @@ async def publish(message: str):
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = Form(...)):
-    file.filename = "{}.jpg".format(time.strftime("%Y%m%d-%H%M%S"))
-    image_destination = await save_upload_file(file)
-    await publish(image_destination)
-    return {
-        "data": "File upload",
-        "image_name": file.filename
-    }
+    try:
+        file.filename = "{}.jpg".format(time.strftime("%Y%m%d-%H%M%S"))
+        image_destination = await save_upload_file(file)
+        await publish(image_destination)
+    except Exception as ex:
+        return jsonable_encoder({
+                "image_name": file.filename,
+                "error": "err",
+        })
+    return jsonable_encoder({
+            "image_name": file.filename,
+            "error": None,
+        })
 
 @app.get('/')
 async def index():
