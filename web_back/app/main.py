@@ -2,15 +2,25 @@ from fastapi import FastAPI, File, UploadFile, Form
 from app.core.redis_helper import RedisHelper
 import uvicorn
 import asyncio
+import os
+import time
 
-async def main(redis):
-    await redis.connect()
-    await asyncio.sleep(2)
-    await redis.disconnect()
-
+SHARED_PATH = "{}/../shared".format(os.path.abspath(os.environ["PYTHONPATH"]))
 
 app = FastAPI()
 redis = RedisHelper()
+
+async def save_upload_file(upload_file: UploadFile):
+    destination = "{}/{}".format(SHARED_PATH, upload_file.filename)
+    print(destination)
+    try:
+        with open(destination, "wb+") as file_object:
+            file_data = await upload_file.read()
+            file_object.write(file_data)
+    except Exception as ex:
+        print(ex)
+    return upload_file.filename
+        
 
 async def publish(message: str):
     await redis.connect()
@@ -19,9 +29,13 @@ async def publish(message: str):
     print(redis._redis.channels, flush=True)
 
 @app.post("/upload/")
-async def upload_file(file: str = Form(...)):
+async def upload_file(file: UploadFile = Form(...)):
+    file.filename = "{}.jpg".format(time.strftime("%Y%m%d-%H%M%S"))
+    image_destination = await save_upload_file(file)
+    await publish(image_destination)
     return {
-        "length": len(file)
+        "data": "File upload",
+        "image_name": file.filename
     }
 
 @app.get('/')

@@ -3,7 +3,10 @@ from app.core.redis_helper import RedisHelper
 from aioredis.pubsub import Receiver
 from aioredis.abc import AbcChannel
 
+SHARED_PATH = "{}/../shared".format(os.path.abspath(os.environ["PYTHONPATH"]))
 
+def get_file(filename: str):
+    full_path = "{}/{}".format(SHARED_PATH, filename)
 async def reader(mpsc):
     async for channel, msg in mpsc.iter():
         print("heartbeat")

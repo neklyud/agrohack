@@ -18,6 +18,7 @@ services:
         build: ./web_back/
         volumes:
           - ./web_back:/web_back
+          - ./shared:/shared
         ports:
           - "8000:8000"
         depends_on:
@@ -29,6 +30,7 @@ services:
         build: ./daemon_back
         volumes: 
             - ./daemon_back:/daemon_back
+            - ./shared:/shared
         depends_on: 
             - postgres
             - redis
