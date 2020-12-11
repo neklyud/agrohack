@@ -1,17 +1,17 @@
 from aioredis import Redis, create_redis_pool
 from typing import Optional
-from aioredis.pubsub import Receiver, Channel
+from aioredis.pubsub import Receiver
 from app.core.config.redis import RedisConfig
 import asyncio
 
 class RedisHelper:
-    def __init__(self):
+    def __init__(self, url = "redis://redis:6379"):
         self.loop = None
         self.db: str = RedisConfig.db
         self.host: str = RedisConfig.host
         self.port: str = RedisConfig.port
         self._redis: Redis
-        self.url: str = "redis://redis:6379"
+        self.url: str = url
 
     async def connect(self) -> Redis:
         if self.loop is None:
@@ -23,23 +23,8 @@ class RedisHelper:
         return self._redis
 
     async def disconnect(self) -> None:
+        print(self._redis)
         if self._redis:
             self._redis.close()
             await self._redis.wait_closed()
 
-    async def publish_message(self, message: str):
-        if self.loop is None:
-            self.loop = asyncio.get_event_loop()
-        await self._redis.publish("channel:1", message)
-
-
-
-async def main():
-    redis = RedisHelper()
-    await redis.connect()
-    await redis.publish_message('hello')
-    await redis.disconnect()
-
-if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())

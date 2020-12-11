@@ -24,3 +24,12 @@ services:
           - postgres
           - redis
         command: bash ./run.sh
+
+    daemon:
+        build: ./daemon_back
+        volumes: 
+            - ./daemon_back:/daemon_back
+        depends_on: 
+            - postgres
+            - redis
+        command: bash ./run.sh

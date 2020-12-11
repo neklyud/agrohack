@@ -1,15 +1,12 @@
 [tool.poetry]
-name = "web_back"
+name = "daemon_back"
 version = "0.1.0"
-description = "Web service in agrohack project"
-authors = ["Neklyudov Semen"]
+description = "Daemon part for agrohack task"
+authors = ["saneklyu <saneklyu@mts.ru>"]
 
 [tool.poetry.dependencies]
 python = "3.9"
-fastapi = "^0.62.0"
-uvicorn = "^0.13.0"
 aioredis = "^1.3.1"
-python-multipart = "^0.0.5"
 
 [tool.poetry.dev-dependencies]
 
