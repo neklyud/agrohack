@@ -9,5 +9,6 @@ COPY poetry.lock pyproject.toml /web_back/
 RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
 
 ENV PYTHONPATH ./
+ENV PYTHONUNBUFFERED 1
 
 COPY . /web_back
