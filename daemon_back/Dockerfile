@@ -1,4 +1,8 @@
-FROM python:3.9.0
+FROM python:3.7.2
+
+RUN apt-get update
+
+RUN pip install --upgrade pip
 
 RUN pip install poetry==1.1.4
 
