@@ -1,12 +1,16 @@
 [tool.poetry]
 name = "daemon_back"
 version = "0.1.0"
-description = "Daemon part for agrohack task"
+description = ""
 authors = ["saneklyu <saneklyu@mts.ru>"]
 
 [tool.poetry.dependencies]
-python = "3.9"
+python = "3.7.2"
+albumentations = "^0.5.2"
 aioredis = "^1.3.1"
+torch = "^1.7.1"
+opencv-python = "^4.4.0"
+torchvision = "^0.8.2"
 
 [tool.poetry.dev-dependencies]
 
